@@ -1,0 +1,34 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products from excel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Products</h1>
+    <p class="subtitle">Kept in an Excel file on the server</p>
+    <p id="status" class="sucess" role="status" ></p>
+
+    <form id="form">
+        <label>Name<input id="name" type="text"></label>
+        <label>Price<input id="price" type="number" step="any" min="0"></label>
+        <label>Category<input id="category" type="text" placeholder="Other"></label>
+        <label class="check"><input id="available" type="checkbox" checked>Available</label>
+        <div class="buttons">
+            <button id="save" type="submit">Add product</button>
+            <button id="cancel" type="button" class="hidden">Cancel</button>
+        </div>
+
+    </form>
+
+    <table>
+        <thead>
+            <tr><th>ID</th><th>Name</th><th>Price</th><th>Category</th><th>Available</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="rows"></tbody>
+    </table>
+    <p><a id="download" href="#">Download the Excel file</a></p>
+    <script src="app.js"></script>
+</body>
+</html>
