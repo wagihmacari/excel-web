@@ -2,7 +2,7 @@
 // The data now lives on the SERVER (in the Excel file). The page asks the API with fetch.
 
 // The address of the API. On your computer it is the Express server from Rung 6.
-const API_URL = "http://localhost:3000";
+const API_URL = "https://excel-api-yil1.onrender.com";
 const PRODUCTS_URL = API_URL + "/api/products";
 
 const statusEl = document.getElementById("status");
@@ -15,16 +15,38 @@ function setStatus(text, type) {
 }
 
 // One safe fetch for the whole page: returns the data, or throws an Error with a clear message
-async function api(url, options = {}) {
-  const response = await fetch(url, options);
-  if (response.status === 204) return null;                     // success with no body (DELETE)
 
-  const data = await response.json().catch(() => null);         // null if the body is not JSON
-  if (!response.ok) {
-    throw new Error(data?.message || "Server responded with status " + response.status);
+async function api(url, options = {}) {
+  // Tell the user if the server takes more than 3 seconds
+  const hint = setTimeout(() => {
+    setStatus(
+      "Waking up the free server... this can take up to a minute.",
+      "loading"
+    );
+  }, 3000);
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: AbortSignal.timeout(90000)
+    });
+
+    if (response.status === 204) return null;
+
+    const data = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      throw new Error(
+        data?.message || "Server responded with status " + response.status
+      );
+    }
+
+    return data;
+  } finally {
+    clearTimeout(hint);
   }
-  return data;
 }
+
 
 // Build the table. textContent (never innerHTML) because the data comes from outside.
 function renderRows(products) {
